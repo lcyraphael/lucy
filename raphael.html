@@ -1,0 +1,96 @@
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Raphaël · Easing Demo</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+        <script src="raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+
+        window.onload = function () {
+
+            var r = Raphael("holder", 800, 600);
+            var man1 = r.image("man1.png", 0, 50, 45, 55);
+            var man2 = r.image("man2.png", 0, 120, 60, 50);
+            var man3 = r.image("man3.png", 0, 190, 45, 50);
+            var man4 = r.image("man4.png", 0, 260, 50, 50);
+            var man5 = r.image("man5.png", 0, 330, 45, 50);
+            var man6 = r.image("man6.png", 0, 400, 45, 60);
+
+            var start = function () {
+              this.lastdx ? this.odx += this.lastdx : this.odx = 0;
+              this.lastdy ? this.ody += this.lastdy : this.ody = 0;
+              this.animate({"fill-opacity": 0.2}, 500);
+            },
+            move = function (dx, dy) {
+              this.transform("T"+(dx+this.odx)+","+(dy+this.ody));
+              this.lastdx = dx;
+              this.lastdy = dy;
+            },
+            up = function () {
+              this.animate({"fill-opacity": 1}, 500);
+            };
+
+            man1.drag(move, start, up);
+            man2.drag(move, start, up);
+            man3.drag(move, start, up);
+            man4.drag(move, start, up);
+            man5.drag(move, start, up);
+            man6.drag(move, start, up);
+
+            var R = 200,
+                init = true,
+                param = {stroke: "#fff", "stroke-width": 30},
+                hash = document.location.hash,
+                marksAttr = {fill: hash || "#444", stroke: "none"};
+
+            drawMarks(R, 120);
+            R -= 40;
+            drawMarks(R, 100);
+            R -= 40;
+            drawMarks(R, 80);
+            R -= 40;
+            drawMarks(R, 60);
+            R -= 40;
+            drawMarks(R, 30);
+
+                function drawMarks(R, total) {
+                    if (total == 31) { // month
+                        var d = new Date;
+                        d.setDate(1);
+                        d.setMonth(d.getMonth() + 1);
+                        d.setDate(-1);
+                        total = d.getDate();
+                    }
+                    var color = "hsb(".concat(Math.round(R) / 200, ", 1, .75)"),
+                        out = r.set();
+                    for (var value = 0; value < total; value++) {
+                        var alpha = 360 / total * value,
+                            a = (90 - alpha) * Math.PI / 180,
+                            x = 300 + R * Math.cos(a),
+                            y = 300 - R * Math.sin(a);
+                        out.push(r.circle(x, y, 2).attr(marksAttr));
+                    }
+                    return out;
+                }
+            };
+
+        </script>
+    </head>
+    </body>
+    <body>
+        <div class="container-fluid">
+        <div class="page-header text-center">
+            <h1>What does your social circle look like?</h1>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <p>This represents you and your social circle. You are at the center. The first ring should only have people you are really close to. In the outer ring, place the people you do not feel very close to at all or don't speak to often. Drag the faces!</p>
+        </div>
+        <div class="col-md-6 col-md-offset-3" id=holder></div>
+         <div class="col-md-8 col-md-offset-2 text-center">
+            <p>Made with <a href="https://dmitrybaranovskiy.github.io/raphael/">Raphaël</a>—JavaScript Vector Library.</p>
+        </div>
+    </body>
+</html>
